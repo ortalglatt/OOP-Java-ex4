@@ -1,0 +1,55 @@
+ortal.netzer
+
+
+=============================
+=      File description     =
+=============================
+SimpleHashSet.java - The parent class of the OpenHashSet and the ClosedHashSet classes.
+OpenHashSet.java - Implements a data structure of an open hash set, built from an array with linked lists.
+ClosedHashSet.java - Implements a data structure of a closed hash set, built from an array.
+CollectionFacadeSet.java - Implements the facade class, a wrapper of LinkedList, TreeSet and HashSet.
+SimpleSetPerformanceAnalyzer.java - Implements an analyzer class that contains 6 tests on 5 different data structures -
+                                    OpenHashSet, ClosedHashSet, TreeSet, LinkedList, HashSet
+                                    (all of them are SimpleSet objects).
+
+
+=============================
+=          Design           =
+=============================
+In the parent class of the open and the closed hash set - SimpleHashSet, I implemented all the methods that are common
+to both of them. For example I implemented a big part of delete and add methods, and I created three abstract methods
+that they use - regularAdd, regularDelete and reSize. I did all of it to avoid from code duplications.
+
+I implemented the OpenHashSet with an array of LinkedList, I used an array because, in every time I build a new open
+hash table, I know exactly what the size should be, and any way I need to build a new one and can not use the old one.
+
+I implemented the ClosedHashSet with an array, for the same reason I used it in the OpenHashSet.
+
+I implemented the CollectionFacadeSet in an way I could use it to wrap the data structures - LinkedList, HashSet and
+TreeSet for the analyzer class. But I also wanted to use the facade class to Wrap the LinkedList objects I used in the
+OpenHashSet class, to avoid from creating another class that will be almost the same ase the CollectionFacadeSet class.
+For that reason I added one more method to the class API - iterator, so I could run in loop on all the values in the
+LinkedList in the reHash method.
+
+
+=============================
+=  Implementation details   =
+=============================
+For the deleted mechanism in the ClosedHashSet, I crated a static final data member DELETED as a new String object, and
+after every deletion of a value, I put in it's place DELETED object.
+I did it because all the objects that going into the main array needed to be strings, and I used a new String object
+so I could compare the address of this DELETED object with the address of every value that appears in the table -
+If they have the same address, this place in the table was deleted. If they don't have the same address, even if they
+contain the same value, the comparison will return false, and the user will know this place was not deleted.
+This solution uses O(1) memory as asked, and doesn't include any creation of another data structure.
+
+In the SimpleSetPerformanceAnalyzer, I wanted to build the class in a way the user will need to change as less as
+possible things if he will want to run specific tests on specific sets. For that reason, I created two data members that
+will need to be changed in that case:
+ * testNums - an array of all the tests numbers. If the user want to run only a part of the tests, he will need to erase
+              the number of tests he doesn't want.
+ * setsType - an HashSet of strings that contains all the sets types the test can run on. If the user want to run the
+              test on a part of the sets, he will need to turn every set type he doesn't want to an empty string.
+Also, in avery "contains" test, I check if the needed data is already in the sets, and if not, the function will add the
+data to all the tested sets. In that way, the user can run only the "contains" test without the "add" tests.
+
